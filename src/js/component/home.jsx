@@ -1,42 +1,40 @@
 import React, { useState, useEffect } from "react";
-import SecondsCounter from "./SecondsCounter";
+import { SecondsCounter } from "./SecondsCounter";
 
-function Home() {
+export const Home = () => {
   const [seconds, setSeconds] = useState(0);
-  const [isCounting, setIsCounting] = useState(true); // Controla si el contador está activo
-  const [countdownTime, setCountdownTime] = useState(null); // Tiempo objetivo para cuenta regresiva
+  const [isCounting, setIsCounting] = useState(false); // Empieza en pausa
+  const [countdownTime, setCountdownTime] = useState(null);
 
   useEffect(() => {
-    if (!isCounting) return; // Detener el contador si está pausado
+    if (!isCounting) return;
 
     const interval = setInterval(() => {
       if (countdownTime !== null) {
         setCountdownTime((prev) => {
           if (prev <= 0) {
-            clearInterval(interval); // Detener el intervalo si llega a cero
+            clearInterval(interval);
             alert("¡La cuenta regresiva ha terminado!");
-            return null; // Resetea la cuenta regresiva
+            return null;
           }
-          return prev - 1; // Decrementar el tiempo de cuenta regresiva
+          return prev - 1;
         });
       } else {
-        setSeconds((prevSeconds) => prevSeconds + 1); // Incrementar segundos normales
+        setSeconds((prevSeconds) => prevSeconds + 1);
       }
     }, 1000);
 
-    return () => clearInterval(interval); // Limpiar el intervalo
+    return () => clearInterval(interval);
   }, [isCounting, countdownTime]);
 
-  // Detectar si quedan exactamente 10 segundos
   useEffect(() => {
     if (countdownTime !== null && countdownTime === 10) {
       alert("¡Quedan 10 segundos para alcanzar el tiempo de cuenta regresiva!");
     }
   }, [countdownTime]);
 
-  // Controladores para los botones
-  const handleStop = () => setIsCounting(false); // Pausar el contador
-  const handleStart = () => setIsCounting(true); // Reanudar el contador
+  const handleStop = () => setIsCounting(false); // Detener el contador
+  const handleStart = () => setIsCounting(true); // Iniciar o reanudar el contador
   const handleReset = () => {
     setSeconds(0);
     setIsCounting(false); // Reiniciar y pausar
@@ -44,32 +42,40 @@ function Home() {
   };
 
   const handleSetCountdown = () => {
-    setCountdownTime(15); // Configurar cuenta regresiva a 30 segundos
+    setCountdownTime(15); // Configurar cuenta regresiva a 15 segundos
     setIsCounting(true); // Asegurar que el contador esté activo
   };
 
   return (
     <div className="container text-center my-4">
       <h1>Contador de Segundos</h1>
-      <SecondsCounter seconds={countdownTime !== null ? countdownTime : seconds} />
-      <div className="my-3">
-        <button className="btn btn-danger mx-2" onClick={handleStop}>
-          Detener
-        </button>
-        <button className="btn btn-success mx-2" onClick={handleStart}>
-          Reanudar
-        </button>
-        <button className="btn btn-primary mx-2" onClick={handleReset}>
-          Reiniciar
-        </button>
-        <button className="btn btn-warning mx-2" onClick={handleSetCountdown}>
-          Iniciar Cuenta Regresiva
-        </button>
+      <div className="d-flex align-items-center justify-content-between bg-dark text-white p-3 rounded">
+        {/* Contador alineado a la izquierda */}
+        <div>
+          <SecondsCounter seconds={countdownTime !== null ? countdownTime : seconds} />
+        </div>
+
+        {/* Botones alineados horizontalmente a la derecha */}
+        <div className="d-flex">
+          <button className="btn btn-success mx-2" onClick={handleStart}>
+            Iniciar
+          </button>
+          <button className="btn btn-danger mx-2" onClick={handleStop}>
+            Detener
+          </button>
+          <button className="btn btn-primary mx-2" onClick={handleReset}>
+            Reiniciar
+          </button>
+          <button className="btn btn-warning mx-2" onClick={handleSetCountdown}>
+            Iniciar Cuenta Regresiva
+          </button>
+        </div>
       </div>
     </div>
   );
-}
+};
 
-export default Home;
+
+
 
 

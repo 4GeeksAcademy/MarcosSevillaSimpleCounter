@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 
 
 // Importar el componente principal
-import Home from "./component/home";
+import {Home} from "./component/home.jsx";
 
 // Renderizar el componente Home
 ReactDOM.createRoot(document.getElementById('app')).render(<Home />);
